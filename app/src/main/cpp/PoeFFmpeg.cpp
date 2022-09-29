@@ -172,10 +172,24 @@ void PoeFFmpeg::start() {
     //开启解码.
     //音频解码
     if(audioChannel){
+        /**
+         * 若文件只有视频流，没有音频流，则指针audioChannel没有初始化
+         * 日志崩溃在audioChannel->play()
+         * 但奇怪的是，已经判断指针audioChannel不为空才走进来，为啥还会出错
+         * 为啥呢？因为
+         * audioChannel定义了，但是没初始化，所以和JAVA不一样的是，对C++来说，只要生成了PoeFFmpeg对象，则内部的audioChannel指针就不是为空！
+         */
         audioChannel->play();
     }
     // 视频解码.
     if(videoChannel){
+          /**
+         * 若文件只有音频流，没有视频流，则指针videoChannel没有初始化
+         * 日志崩溃在videoChannel->play()
+         * 但奇怪的是，已经判断指针videoChannel不为空才走进来，为啥还会出错
+         * 为啥呢？因为
+         * videoChannel定义了，但是没初始化，所以和JAVA不一样的是，对C++来说，只要生成了PoeFFmpeg对象，则内部的videoChannel指针就不是为空！
+         */
         //开启视频解码线程. 读取packet-》frame->synchronized->window_buffer.
         videoChannel->play();
     }
